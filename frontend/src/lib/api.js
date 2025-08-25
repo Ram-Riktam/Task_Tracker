@@ -5,7 +5,7 @@ export async function getCards() {
   const res = await fetch(`${API_URL}${CARDS_ENDPOINT}`);
   if (!res.ok) throw new Error("Failed to fetch cards");
   const result = await res.json();
-  return result.data; // cards array
+  return result.data; 
 }
 
 export async function createCard(cardData) {
@@ -15,7 +15,7 @@ export async function createCard(cardData) {
     body: JSON.stringify(cardData),
   });
   if (!res.ok) throw new Error("Failed to create card");
-  return await res.json(); // full created card
+  return await res.json();
 }
 
 export async function updateCard(id, cardData) {
@@ -25,7 +25,7 @@ export async function updateCard(id, cardData) {
     body: JSON.stringify(cardData),
   });
   if (!res.ok) throw new Error("Failed to update card");
-  return await res.json(); // full updated card
+  return await res.json(); 
 }
 
 export async function deleteCard(id) {

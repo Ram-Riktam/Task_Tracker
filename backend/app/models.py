@@ -9,6 +9,6 @@ class Card(SQLModel, table=True):
     Description: Optional[str] = None
     added_by: str
     comments: Optional[str] = None
-    status: str = Field(default="todo")  # todo, inprogress, completed, deployed
+    status: str = Field(default="todo")  
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)

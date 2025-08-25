@@ -12,7 +12,6 @@
   function saveCard() {
     if (!titleValue.trim()) return;
 
-    // Always add new cards to "Todo"
     dispatch("addCard", {
       status: "Todo",
       title: titleValue,
@@ -39,27 +38,28 @@
   <div class="modal-overlay" on:click={() => (showModal = false)}>
     <div class="modal" on:click|stopPropagation>
       <div class="cards">
-      <div class="create-card">
-        <h1>Create Card</h1>
-         <button class="close-btn" on:click={()=>(showModal=false)}>X</button>
-      </div>
-      <hr />
-      <div class="card-data">
-        <label class="title-label">Title</label>
-        <input
-          type="text"
-          placeholder="Enter Title..."
-          bind:value={titleValue}
-        />
-        <label class="description-label">Description</label>
-        <textarea placeholder="Enter Description..." bind:value={descValue}
-        ></textarea>
-        <div class="modal-actions">
-          <button class="save-btn" on:click={saveCard}>Save</button>
+        <div class="create-card">
+          <h1>Create Card</h1>
+          <button class="close-btn" on:click={() => (showModal = false)}
+            >X</button
+          >
+        </div>
+        <hr />
+        <div class="card-data">
+          <label class="title-label">Title</label>
+          <input
+            type="text"
+            placeholder="Enter Title..."
+            bind:value={titleValue}
+          />
+          <label class="description-label">Description</label>
+          <textarea placeholder="Enter Description..." bind:value={descValue}
+          ></textarea>
+          <div class="modal-actions">
+            <button class="save-btn" on:click={saveCard}>Save</button>
+          </div>
         </div>
       </div>
-      </div>
-
     </div>
   </div>
 {/if}
@@ -116,8 +116,6 @@
     justify-content: center;
     align-items: center;
     z-index: 200;
-    /* height: 50px;
-    width: 100px; */
   }
   .modal {
     background: white;
@@ -128,7 +126,6 @@
     text-align: center;
     min-height: 500px;
     max-height: 600px;
-   
   }
   .modal textarea,
   .modal input {
@@ -155,13 +152,13 @@
     font-weight: bold;
     margin-left: 20px;
   }
-  .description-label{
+  .description-label {
     font-size: 25px;
   }
-  .title-label{
+  .title-label {
     font-size: 30px;
   }
-  .modal textarea{
+  .modal textarea {
     font-size: 20px;
   }
   .modal-actions {
@@ -169,7 +166,6 @@
     justify-content: flex-end;
     margin-right: 30px;
     margin-bottom: 20px;
-   
   }
   .save-btn {
     background: #0567a0;
@@ -180,53 +176,50 @@
     height: 45px;
     width: 90px;
     font-size: 20px;
-    
   }
-  .create-card{
+  .create-card {
     display: flex;
     justify-content: space-between;
     padding: 5px;
     margin-left: 26px;
   }
-  .close-btn{
+  .close-btn {
     height: 30px;
     width: 30px;
     color: #f56c6c;
-    border: 5px solid  #f56c6c;
+    border: 5px solid #f56c6c;
     border-radius: 50%;
     margin-top: 10px;
     margin-right: 10px;
     font-weight: bold;
-
-    
   }
- 
- 
-  .cards{
+
+  .cards {
     border: 1px solid lightblue;
     border-radius: 10px;
     box-shadow: 2px 2px 8px rgba(2, 51, 80, 0.5);
-
   }
   .close-btn {
-  height: 30px;
-  width: 30px;
-  padding: 10px;              
-  font-size: 16px;
-  line-height: 1;
-  background: transparent;    
-  color: #f56c6c;
-  border: 2px solid #f56c6c;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
-}
+    height: 30px;
+    width: 30px;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1;
+    background: transparent;
+    color: #f56c6c;
+    border: 2px solid #f56c6c;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
 
-.close-btn:hover {
-  background: #f56c6c;
-  color: white;
-}
+  .close-btn:hover {
+    background: #f56c6c;
+    color: white;
+  }
 </style>

@@ -1,5 +1,10 @@
 <script>
-  import { deleteCard as apiDeleteCard, updateCard as apiUpdateCard, createCard, getCards } from "$lib/api.js";
+  import {
+      deleteCard as apiDeleteCard,
+      updateCard as apiUpdateCard,
+      createCard,
+      getCards,
+  } from "$lib/api.js";
   import { onMount } from "svelte";
   import Header from "./Header.svelte";
   import List from "./List.svelte";
@@ -16,11 +21,10 @@
   const colors = {
     Todo: "#1E90FF",
     "In Progress": "#FF8C00",
-    Completed: "#28A745" ,
+    Completed: "#28A745",
     Deploy: "#6F42C1",
   };
 
-  // 🔄 Fetch and refresh board
   async function refreshBoard() {
     const cards = await getCards();
     let newBoard = { Todo: [], "In Progress": [], Completed: [], Deploy: [] };
@@ -32,10 +36,8 @@
     board = newBoard;
   }
 
-  // initial load
   onMount(refreshBoard);
 
-  // Add card
   async function addCard(event) {
     const { status, title, description } = event.detail;
     await createCard({
@@ -44,10 +46,9 @@
       status,
       added_by: "frontend",
     });
-    await refreshBoard(); // 🔄 refresh
+    await refreshBoard();
   }
 
-  // Update card
   async function handleUpdateCard(event) {
     const { id, newTitle, newDescription, newStatus } = event.detail;
     await apiUpdateCard(id, {
@@ -56,17 +57,15 @@
       status: newStatus,
       added_by: "frontend",
     });
-    await refreshBoard(); // 🔄 refresh
+    await refreshBoard();
   }
 
-  // Delete card
   async function deleteCard(event) {
     const { id } = event.detail;
     await apiDeleteCard(id);
-    await refreshBoard(); // 🔄 refresh
+    await refreshBoard();
   }
 
-  // Add new list
   function addList() {
     if (!newListName.trim()) return;
     if (!board[newListName]) {
@@ -79,7 +78,7 @@
 <Header on:addCard={addCard} />
 
 <div class="add-list">
-  <input type="text" placeholder="New List Name" bind:value={newListName}/>
+  <input type="text" placeholder="New List Name" bind:value={newListName} />
   <button on:click={addList}>Add List</button>
 </div>
 
@@ -107,21 +106,21 @@
     background: #f6f4f4;
   }
   .add-list {
-    display:flex;
-    gap:8px;
-    margin:12px 20px;
+    display: flex;
+    gap: 8px;
+    margin: 12px 20px;
   }
   .add-list input {
-    padding:6px 10px;
-    border-radius:4px;
-    border:1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
   }
   .add-list button {
-    padding:6px 12px;
-    background:#0567a0;
-    color:white;
-    border:none;
-    border-radius:4px;
-    cursor:pointer;
+    padding: 6px 12px;
+    background: #0567a0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
   }
 </style>

@@ -56,7 +56,7 @@ def update_card(card_id: str, card: CardUpdate, session: Session = Depends(get_s
     if not db_card:
         raise HTTPException(status_code=404, detail="Card not found")
 
-    # update only provided fields
+   
     if card.Title is not None:
         db_card.Title = card.Title
     if card.Description is not None:
@@ -72,7 +72,7 @@ def update_card(card_id: str, card: CardUpdate, session: Session = Depends(get_s
     session.commit()
     session.refresh(db_card)
 
-    # fetch updated list
+   
     cards = session.query(Card).all()
     result = [
         {
@@ -95,9 +95,7 @@ def update_card(card_id: str, card: CardUpdate, session: Session = Depends(get_s
     }
 
 
-# -------------------------
-# DELETE - Delete Card
-# -------------------------
+
 @router.delete("/{card_id}")
 def delete_card(card_id: str, session: Session = Depends(get_session)):
     db_card = session.query(Card).filter(Card.id == card_id).first()
@@ -107,7 +105,7 @@ def delete_card(card_id: str, session: Session = Depends(get_session)):
     session.delete(db_card)
     session.commit()
 
-    # fetch updated list
+    
     cards = session.query(Card).all()
     result = [
         {

@@ -8,21 +8,10 @@
   function handleClick() {
     dispatch("click", card);
   }
-
-  function handleDragStart(e) {
-    e.dataTransfer.setData("cardId", card.id);
-    e.dataTransfer.setData("fromStatus", status);
-    e.dataTransfer.setData("fromIndex", index);
-  }
 </script>
 
-<div
-  class="card"
-  draggable="true"
-  on:click={handleClick}
->
-  <p class="title">{card.Title}</p> 
- 
+<div class="card" draggable="true" on:click={handleClick}>
+  <p class="title">{card.Title}</p>
 </div>
 
 <style>

@@ -80,18 +80,17 @@
       {#if !editing}
         <div class="title-card">
           <div class="cancel-border">
-            
-              <h3 class="status">
-                <strong>Status:</strong>
-                <span
-                  class="status-value pill {selectedStatus
-                    .toLowerCase()
-                    .replace(' ', '-')}"
-                >
-                  {selectedStatus}
-                </span>
-              </h3>
-            
+            <h3 class="status">
+              <strong>Status:</strong>
+              <span
+                class="status-value pill {selectedStatus
+                  .toLowerCase()
+                  .replace(' ', '-')}"
+              >
+                {selectedStatus}
+              </span>
+            </h3>
+
             <div class="btn-border">
               <button class="close-btn" on:click={() => (showCardModal = false)}
                 >X</button
@@ -203,11 +202,9 @@
     padding: 12px;
     border-radius: 8px;
     min-width: 300px;
-    /* max-height: 1000px; */
     display: flex;
     flex-direction: column;
     gap: 8px;
-    /* overflow-y: auto; */
     height: 600px;
   }
 
@@ -229,7 +226,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* z-index: 200; */
   }
 
   .modal {
@@ -240,7 +236,6 @@
     min-width: 350px;
     max-width: 800px;
     max-height: 700px;
-    /* max-height: 105vh; */
     overflow-y: auto;
   }
 
@@ -270,8 +265,6 @@
     height: 30px;
     width: 30px;
     text-align: right;
-    /* border-radius: 50%; */
-    /* border: 1px solid  #f56c6c; */
   }
   .cancel-border {
     display: flex;
@@ -370,7 +363,6 @@
     box-shadow: 2px 2px 8px rgba(2, 51, 80, 0.5);
     width: 600px;
     height: 550px;
-    /* max-width: 900px; */
     margin: 0 auto;
     font-size: 20px;
   }
@@ -382,10 +374,9 @@
   .edit-modal input,
   .edit-modal textarea {
     width: 97%;
-    /* padding: 25px; */
+
     border: 1px solid #ccc;
     border-radius: 6px;
-    /* font-size: 16px; */
   }
 
   .edit-modal input {
@@ -483,7 +474,6 @@
     width: fit-content;
   }
 
-  /* Status pill colors */
   .todo {
     background: #1e90ff;
   }
