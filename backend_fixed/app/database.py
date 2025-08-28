@@ -2,8 +2,6 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import text
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 DB_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./cards.db")
 
