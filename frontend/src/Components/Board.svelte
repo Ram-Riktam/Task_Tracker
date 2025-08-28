@@ -1,34 +1,43 @@
 <script>
-  import {
-      deleteCard as apiDeleteCard,
-      updateCard as apiUpdateCard,
-      createCard,
-      getCards,
-  } from "$lib/api.js";
-  import { onMount } from "svelte";
   import Header from "./Header.svelte";
   import List from "./List.svelte";
+  import {
+    getCards,
+    createCard,
+    updateCard,
+    deleteCard as apiDeleteCard,
+  } from "$lib/api.js";
+  import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   let board = {
     Todo: [],
     "In Progress": [],
     Completed: [],
-    Deploy: [],
+    Deployed: [],
+    Cancelled: [],
   };
-
-  let newListName = "";
 
   const colors = {
     Todo: "#1E90FF",
     "In Progress": "#FF8C00",
     Completed: "#28A745",
-    Deploy: "#6F42C1",
+    Deployed: "#6F42C1",
+    Cancelled: "rgb(185,12,12)",
   };
 
+ 
   async function refreshBoard() {
     const cards = await getCards();
-    let newBoard = { Todo: [], "In Progress": [], Completed: [], Deploy: [] };
-
+    const newBoard = {
+      Todo: [],
+      "In Progress": [],
+      Completed: [],
+      Deployed: [],
+      Cancelled: [],
+    };
     for (const c of cards) {
       if (!newBoard[c.status]) newBoard[c.status] = [];
       newBoard[c.status].push(c);
@@ -36,91 +45,85 @@
     board = newBoard;
   }
 
-  onMount(refreshBoard);
+async function handleCardCreated(event) {
+  const card = event.detail;
 
-  async function addCard(event) {
-    const { status, title, description } = event.detail;
-    await createCard({
-      Title: title,
-      Description: description,
-      status,
+
+  board = {
+    ...board,
+    [card.status]: [...board[card.status], card],
+  };
+
+  try {
+    const created = await createCard(card); 
+    await refreshBoard(); 
+  } catch (err) {
+    console.error("Create failed", err);
+    await refreshBoard(); 
+  }
+}
+
+
+
+  
+  async function handleEditCard(event) {
+    const card = event.detail;
+    const newTitle =  card.title;
+    const newDescription =card.description;
+
+    await updateCard(card.id, {
+      title: newTitle,
+      description: newDescription,
+      status: card.status,
       added_by: "frontend",
     });
+
     await refreshBoard();
   }
 
-  async function handleUpdateCard(event) {
-    const { id, newTitle, newDescription, newStatus } = event.detail;
-    await apiUpdateCard(id, {
-      Title: newTitle,
-      Description: newDescription,
-      status: newStatus,
-      added_by: "frontend",
-    });
-    await refreshBoard();
-  }
-
-  async function deleteCard(event) {
-    const { id } = event.detail;
-    await apiDeleteCard(id);
-    await refreshBoard();
-  }
-
-  function addList() {
-    if (!newListName.trim()) return;
-    if (!board[newListName]) {
-      board = { ...board, [newListName]: [] };
+ 
+  async function handleDeleteCard(event) {
+    const card = event.detail;
+      {
+      await apiDeleteCard(card.id);
+      await refreshBoard();
     }
-    newListName = "";
   }
+
+  
+  onMount(refreshBoard);
 </script>
 
-<Header on:addCard={addCard} />
-
-<div class="add-list">
-  <input type="text" placeholder="New List Name" bind:value={newListName} />
-  <button on:click={addList}>Add List</button>
-</div>
+<Header on:cardCreated={handleCardCreated} />
 
 <div class="board">
   {#each Object.entries(board) as [status, cards]}
     <List
-      {status}
       {cards}
+      {status}
       color={colors[status]}
-      on:updateCard={handleUpdateCard}
-      on:deleteCard={deleteCard}
+      on:editCard={handleEditCard}
+      on:deleteCard={handleDeleteCard}
     />
   {/each}
 </div>
 
 <style>
+ .board {
+  display: flex;
+  gap: 1%;
+  padding: 1%;
+  min-height: 80vh;
+}
+
+
+@media (max-width: 768px) {
   .board {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    min-height: 80vh;
-    max-height: 120vh;
-    min-width: 1340px;
-    max-width: 2000px;
-    background: #f6f4f4;
+    
+    gap: 2%;           
+    padding: 2%;
+    flex-wrap: wrap;        
   }
-  .add-list {
-    display: flex;
-    gap: 8px;
-    margin: 12px 20px;
-  }
-  .add-list input {
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  .add-list button {
-    padding: 6px 12px;
-    background: #0567a0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+}
+
 </style>

@@ -8,10 +8,24 @@
   function handleClick() {
     dispatch("click", card);
   }
+
+  function handleDragStart(e) {
+    e.dataTransfer.setData("cardId", card.id);
+    e.dataTransfer.setData("fromStatus", status);
+    e.dataTransfer.setData("fromIndex", index);
+  }
 </script>
 
-<div class="card" draggable="true" on:click={handleClick}>
-  <p class="title">{card.Title}</p>
+<div
+  class="card"
+  draggable="true"
+  on:click={handleClick}
+  on:dragstart={handleDragStart}
+>
+  <p class="title">{card.task_number}</p> 
+  {#if card.title}
+    <p class="description">{card.title}</p>
+  {/if}
 </div>
 
 <style>
@@ -26,11 +40,14 @@
   }
   .card .title {
     font-weight: bold;
+    font-size: 1.3em;
     margin-bottom: 4px;
     overflow: hidden;
   }
   .card .description {
-    font-size: 0.9em;
+    font-size: 1em;
     color: #555;
+    overflow-x: hidden;
+    margin-right: 10px;
   }
 </style>

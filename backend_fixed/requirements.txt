@@ -1,0 +1,4 @@
+aiohttp>=3.9
+aiohttp-cors>=0.7.0
+SQLAlchemy>=2.0
+aiosqlite>=0.19

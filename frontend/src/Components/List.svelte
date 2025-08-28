@@ -5,9 +5,9 @@
   import Card from "./Card.svelte";
 
   export let status;
-  export let cards = [];
   export let color = "#ccc";
-  export let boardStatuses = ["Todo", "In Progress", "Completed", "Deploy"];
+  export let cards = []; 
+  export let boardStatuses = ["Todo", "In Progress", "Completed", "Deployed", "Cancelled"];
 
   let expanded = false;
   let open = false;
@@ -25,11 +25,7 @@
   }
 
   function openCardModal(card) {
-    selectedCard = {
-      ...card,
-      title: card.Title,
-      description: card.Description,
-    };
+    selectedCard = { ...card };
     selectedStatus = card.status;
     editing = false;
     expanded = false;
@@ -40,13 +36,9 @@
     editing = true;
   }
 
+ 
   function saveCardEdit() {
-    dispatch("updateCard", {
-      id: selectedCard.id,
-      newTitle: selectedCard.title,
-      newDescription: selectedCard.description,
-      newStatus: selectedStatus,
-    });
+    dispatch("editCard", { ...selectedCard, status: selectedStatus });
     showCardModal = false;
   }
 
@@ -56,7 +48,7 @@
   }
 
   function deleteCard() {
-    dispatch("deleteCard", { id: selectedCard.id });
+    dispatch("deleteCard", selectedCard);
     showDeleteConfirm = false;
   }
 
@@ -83,18 +75,13 @@
             <h3 class="status">
               <strong>Status:</strong>
               <span
-                class="status-value pill {selectedStatus
-                  .toLowerCase()
-                  .replace(' ', '-')}"
-              >
+                class="status-value pill {selectedStatus.toLowerCase().replace(' ', '-')}">
                 {selectedStatus}
               </span>
             </h3>
 
             <div class="btn-border">
-              <button class="close-btn" on:click={() => (showCardModal = false)}
-                >X</button
-              >
+              <button class="close-btn" on:click={() => (showCardModal = false)}>X</button>
             </div>
           </div>
 
@@ -105,14 +92,11 @@
                 {selectedCard.description}
                 <span class="read-more" on:click={toggleExpand}>Read less</span>
               {:else}
-                {selectedCard.description &&
-                selectedCard.description.length > 550
+                {selectedCard.description && selectedCard.description.length > 550
                   ? selectedCard.description.slice(0, 550) + "..."
                   : selectedCard.description}
                 {#if selectedCard.description && selectedCard.description.length > 150}
-                  <span class="read-more" on:click={toggleExpand}
-                    >Read more</span
-                  >
+                  <span class="read-more" on:click={toggleExpand}>Read more</span>
                 {/if}
               {/if}
             </div>
@@ -127,9 +111,7 @@
         <div class="modal-header">
           <h3>Edit Card</h3>
           <div class="btn-border">
-            <button class="close-btn" on:click={() => (showCardModal = false)}
-              >X</button
-            >
+            <button class="close-btn" on:click={() => (showCardModal = false)}>X</button>
           </div>
         </div>
         <div class="edit-modal">
@@ -142,9 +124,7 @@
           <label>Status:</label>
           <div class="status-dropdown">
             <div class="selected-wrapper" on:click={() => (open = !open)}>
-              <div
-                class="pill {selectedStatus.toLowerCase().replace(' ', '-')}"
-              >
+              <div class="pill {selectedStatus.toLowerCase().replace(' ', '-')}">
                 {selectedStatus}
               </div>
               <span class="arrow">{open ? "▲" : "▼"}</span>
@@ -154,13 +134,10 @@
               <ul
                 class="options"
                 in:slide={{ duration: 200 }}
-                out:fade={{ duration: 150 }}
-              >
+                out:fade={{ duration: 150 }}>
                 {#each boardStatuses as s}
                   <li class="option" on:click={() => selectStatus(s)}>
-                    <div class="pill {s.toLowerCase().replace(' ', '-')}">
-                      {s}
-                    </div>
+                    <div class="pill {s.toLowerCase().replace(' ', '-')}">{s}</div>
                   </li>
                 {/each}
               </ul>
@@ -169,9 +146,7 @@
 
           <div class="modal-actions">
             <button class="save-btn" on:click={saveCardEdit}>Save</button>
-            <button class="cancel-btn" on:click={() => (showCardModal = false)}
-              >Cancel</button
-            >
+            <button class="cancel-btn" on:click={() => (showCardModal = false)}>Cancel</button>
           </div>
         </div>
       {/if}
@@ -187,9 +162,7 @@
         This action will permanently delete the card. Do you want to continue?
       </p>
       <div class="modal-actions">
-        <button on:click={() => (showDeleteConfirm = false)} class="cancel-btn"
-          >Cancel</button
-        >
+        <button on:click={() => (showDeleteConfirm = false)} class="cancel-btn">Cancel</button>
         <button class="delete-btn" on:click={deleteCard}>OK</button>
       </div>
     </div>
@@ -198,15 +171,35 @@
 
 <style>
   .list {
-    background: #e0e0e0;
-    padding: 12px;
-    border-radius: 8px;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    height: 600px;
+  background: #e0e0e0;
+  padding: 12px;
+  border-radius: 8px;
+  width: 18%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  Max-height: 600px;
+  overflow-y: auto;
+  margin-bottom: 2%;
+  /* align-items: center; */
+}
+
+
+@media (max-width: 1024px) {
+  .list {
+    min-width: 15%;
+    height: auto;
   }
+}
+
+
+@media (max-width: 600px) {
+  .list {
+    min-width: 100%;
+    flex-direction: column;  
+    height: auto;
+  }
+}
 
   .partition {
     text-align: center;
@@ -224,7 +217,7 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.3);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -237,6 +230,7 @@
     max-width: 800px;
     max-height: 700px;
     overflow-y: auto;
+    margin-left: 35%;
   }
 
   .close-btn {
@@ -483,8 +477,11 @@
   .completed {
     background: #28a745;
   }
-  .deploy {
+  .deployed {
     background: #6f42c1;
+  }
+  .cancelled{
+    background: rgb(185, 12, 12);
   }
   .delete-text {
     font-size: 20px;
