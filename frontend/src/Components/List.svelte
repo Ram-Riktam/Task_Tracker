@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { fade, slide } from "svelte/transition";
-  import Delete_icon from "../Images/delete_icon.jpg";
+  import Delete_icon from "../assets/delete_icon.jpg";
   import Card from "./Card.svelte";
 
   export let status;
